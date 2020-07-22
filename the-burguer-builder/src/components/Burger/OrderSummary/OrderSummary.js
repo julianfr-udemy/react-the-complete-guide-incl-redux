@@ -10,7 +10,7 @@ export default class extends Component {
   render() {
     const ingredientSummary = Object
       .keys(this.props.ingredients)
-      .map(ingredient => <li><span key={ingredient} style={{ textTransform: "capitalize" }}>{ingredient}</span>: {this.props.ingredients[ingredient]}</li>);
+      .map(ingredient => <li key={ingredient} ><span style={{ textTransform: "capitalize" }}>{ingredient}</span>: {this.props.ingredients[ingredient]}</li>);
 
     return (
       <Fragment>
