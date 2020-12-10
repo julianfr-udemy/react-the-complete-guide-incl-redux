@@ -1,11 +1,17 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import Spinner from '../../../../src/components/UI/Spinner/Spinner';
 import axiosOrders from '../../../axios-orders';
 import Button from "../../../components/UI/Button/Button";
 import Input from '../../../components/UI/Input/Input';
 import classes from './ContactData.module.css';
 
-export default class extends Component {
+const mapStateToProps = state => ({
+  ingredients: state.ingredients,
+  price: state.totalPrice
+});
+
+export default connect(mapStateToProps)(class extends Component {
   state = {
     orderForm: {
       name: {
@@ -138,8 +144,6 @@ export default class extends Component {
 
     const formIsValid = !Object.keys(updatedOrderForm).find(key => updatedOrderForm[key].valid === false);
 
-    console.log({ formIsValid });
-
     this.setState({ orderForm: updatedOrderForm, formIsValid });
   }
 
@@ -180,4 +184,4 @@ export default class extends Component {
       </div>
     );
   }
-}
+})
