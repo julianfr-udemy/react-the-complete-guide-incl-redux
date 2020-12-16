@@ -11,7 +11,7 @@ import authReducer from './store/reducers/auth';
 import burgerReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 ReactDOM.render(
   <Provider store={createStore(combineReducers({ burgerBuilder: burgerReducer, order: orderReducer, auth: authReducer }), composeEnhancers(applyMiddleware(thunk)))}>
