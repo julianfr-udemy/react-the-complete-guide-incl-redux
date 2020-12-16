@@ -7,6 +7,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import { setAuthRedirectPath } from '../../store/actions/auth';
 import { addIngredient, initIngredients, removeIngredient } from '../../store/actions/burgerBuilder';
 import { purchaseInit } from '../../store/actions/order';
 
@@ -27,7 +28,12 @@ class BurgerBuilder extends Component {
   }
 
   purchaseHandler = () => {
-    this.setState({ purchasing: true });
+    if (this.props.isAuthenticated) {
+      this.setState({ purchasing: true });
+    } else {
+      this.props.onSetAuthRedirectPath('/checkout');
+      this.props.history.push("/auth");
+    }
   }
 
   purchaseCancelHandler = () => {
@@ -59,7 +65,8 @@ class BurgerBuilder extends Component {
             ingredientRemoved={this.props.onIngredientRemoved}
             ordered={this.purchaseHandler}
             price={this.props.totalPrice}
-            purchasable={this.updatePurcharseState(this.props.ingredients)} />
+            purchasable={this.updatePurcharseState(this.props.ingredients)}
+            isAuth={this.props.isAuthenticated} />
         </Fragment>);
 
       orderSummary = <OrderSummary
@@ -85,15 +92,16 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => ({
   ingredients: state.burgerBuilder.ingredients,
   totalPrice: state.burgerBuilder.totalPrice,
-  error: state.burgerBuilder.error
+  error: state.burgerBuilder.error,
+  isAuthenticated: state.auth.token !== null
 });
 
 const mapDispatchToProps = dispatch => ({
   onIngredientAdded: ingredient => dispatch(addIngredient(ingredient)),
   onIngredientRemoved: ingredient => dispatch(removeIngredient(ingredient)),
   onInitIngredients: () => dispatch(initIngredients()),
-  onInitPurchase: () => dispatch(purchaseInit())
-})
-
+  onInitPurchase: () => dispatch(purchaseInit),
+  onSetAuthRedirectPath: path => dispatch(setAuthRedirectPath(path))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axiosOrders));

@@ -9,11 +9,13 @@ import classes from './ContactData.module.css';
 const mapStateToProps = state => ({
   ingredients: state.burgerBuilder.ingredients,
   price: state.burgerBuilder.totalPrice,
-  loading: state.order.loading
+  loading: state.order.loading,
+  token: state.auth.token,
+  userId: state.auth.userId
 });
 
 const mapDispatchToProps = dispatch => ({
-  onOrderBurger: data => dispatch(purchaseBurger(data))
+  onOrderBurger: (data, token) => dispatch(purchaseBurger(data, token))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(class extends Component {
@@ -54,8 +56,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(class extends Compon
         value: '',
         validation: {
           required: true,
-          minLenght: 5,
-          maxLenght: 5
+          minLength: 5,
+          maxLength: 5
         },
         valid: false,
         touched: false
@@ -114,16 +116,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(class extends Compon
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
-      orderData: formData
+      orderData: formData,
+      userId: this.props.userId
     };
 
-    this.props.onOrderBurger(order);
+    this.props.onOrderBurger(order, this.props.token);
   }
 
   checkValidity = (value, rules = {}) => {
     if (rules.required && value.trim() === '') { return false; }
-    if (rules.minLenght && value.length < rules.minLenght) { return false; }
-    if (rules.maxLenght && value.length > rules.maxLenght) { return false; }
+    if (rules.minLength && value.length < rules.minLength) { return false; }
+    if (rules.maxLength && value.length > rules.maxLength) { return false; }
 
     return true;
   }

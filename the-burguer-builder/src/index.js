@@ -7,13 +7,14 @@ import thunk from 'redux-thunk';
 import App from './App';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
+import authReducer from './store/reducers/auth';
 import burgerReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 ReactDOM.render(
-  <Provider store={createStore(combineReducers({ burgerBuilder: burgerReducer, order: orderReducer }), composeEnhancers(applyMiddleware(thunk)))}>
+  <Provider store={createStore(combineReducers({ burgerBuilder: burgerReducer, order: orderReducer, auth: authReducer }), composeEnhancers(applyMiddleware(thunk)))}>
     <React.StrictMode>
       <BrowserRouter>
         <App />
