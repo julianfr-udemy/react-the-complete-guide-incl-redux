@@ -11,7 +11,7 @@ import { setAuthRedirectPath } from '../../store/actions/auth';
 import { addIngredient, initIngredients, removeIngredient } from '../../store/actions/burgerBuilder';
 import { purchaseInit } from '../../store/actions/order';
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
   state = { purchasing: false };
 
   componentDidMount() {
