@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { AUTH_FAIL, AUTH_LOGOUT, AUTH_START, AUTH_SUCCESS, SET_AUTH_REDIRECT_PATH } from "./actionTypes";
-import { googleApiKey } from './auth.json';
+import { googleApiKey } from './auth.configuration.json';
 
 export const auth = (email, password, isSignup) => dispatch => {
   dispatch({ type: AUTH_START });

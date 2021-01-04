@@ -1,40 +1,36 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Modal from '../../components/UI/Modal/Modal';
 
 export default (WrappedComponent, axios) => {
-  return class extends Component {
-    state = { error: null };
+  return props => {
+    const [error, setError] = useState(null);
 
-    componentWillMount() {
-      this.reqInterceptor = axios.interceptors.request.use(request => {
-        this.setState({ error: null });
-        return request;
-      });
-      this.resInterceptor = axios.interceptors.response.use(
-        response => response,
-        error => { this.setState({ error }) });
-    }
+    const reqInterceptor = axios.interceptors.request.use(request => {
+      setError(null);
+      return request;
+    });
 
-    errorConfirmedHandler = () => {
-      this.setState({ error: null });
-    }
+    const resInterceptor = axios.interceptors.response.use(
+      response => response,
+      error => setError(error)
+    );
 
-    componentWillUnmount() {
-      axios.interceptors.request.eject(this.reqInterceptor);
-      axios.interceptors.response.eject(this.resInterceptor);
-    }
+    const errorConfirmedHandler = () => setError(null);
 
-    render() {
-      return (
-        <Fragment>
-          <Modal
-            show={this.state.error}
-            modalClosed={this.errorConfirmedHandler}>
-            {this.state.error ? this.state.error.message : null}
-          </Modal>
-          <WrappedComponent {...this.props} />
-        </Fragment>
-      );
-    }
+    useEffect(() => () => {
+      axios.interceptors.request.eject(reqInterceptor);
+      axios.interceptors.response.eject(resInterceptor);
+    }, [reqInterceptor, resInterceptor]);
+
+    return (
+      <Fragment>
+        <Modal
+          show={error}
+          modalClosed={errorConfirmedHandler}>
+          {error ? error.message : null}
+        </Modal>
+        <WrappedComponent {...props} />
+      </Fragment>
+    );
   }
 }

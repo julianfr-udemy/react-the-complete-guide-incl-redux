@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { logout } from "../../../store/actions/auth";
@@ -6,12 +6,12 @@ import { logout } from "../../../store/actions/auth";
 export default connect(
   null,
   dispatch => ({ onLogout: () => dispatch(logout()) })
-)(class Logout extends Component {
-  componentDidMount() {
-    this.props.onLogout();
-  }
+)(props => {
+  const { onLogout } = props;
 
-  render() {
-    return <Redirect to="/" />
-  }
+  useEffect(() => {
+    onLogout();
+  }, [onLogout]);
+
+  return <Redirect to="/" />
 });
